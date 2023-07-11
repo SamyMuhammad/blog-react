@@ -1,14 +1,14 @@
 import React from 'react'
-import Header from '../assets/Components/Header'
-import Search from '../assets/Components/Search'
-import FeaturedPosts from '../assets/Components/FeaturedPosts'
-import Footer from '../assets/Components/Footer'
+import Header from './../Components/Header'
+import HeroSection from './../Components/HeroSection'
+import FeaturedPosts from './../Components/FeaturedPosts'
+import Footer from './../Components/Footer'
 
 function Home() {
   return (
     <>
     <Header />
-    <Search />
+    <HeroSection />
     <FeaturedPosts />
     <Footer />
     </>
