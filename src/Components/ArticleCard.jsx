@@ -7,7 +7,7 @@ function ArticleCard({article}) {
 
   return (
     <div key={article.id}
-    onClick={() => navigate('article/'+article.slug)}
+    onClick={() => navigate('/article/'+article.slug)}
     className="article-card m-4 mb-16 cursor-pointer">
       <img
         src={article.cover}

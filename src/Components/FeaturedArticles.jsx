@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ArticleCard from "./ArticleCard";
-import ApiConfig from "../Services/ApiConfig";
+import ApiConfig from "./../Services/ApiConfig";
 
 function FeaturedArticles() {
   const [articles, setArticles] = useState([]);

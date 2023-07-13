@@ -7,4 +7,10 @@ const getFeaturedArticles = axios.get(BASE_URL + "/article", {
     featured: 1,
   },
 });
-export default { getFeaturedArticles };
+
+const getArticlesList = (pageNum = 1) => axios.get(BASE_URL + "/article", {
+  params: {
+    page: pageNum,
+  },
+});
+export default { getFeaturedArticles, getArticlesList };
