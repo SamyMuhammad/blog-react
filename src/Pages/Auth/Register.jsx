@@ -4,7 +4,7 @@ export default function Register() {
     <div className="w-full px-16 py-10">
       <form className="m-auto w-2/3">
         <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12">
+          <div className="border-b border-gray-900/10 pb-8">
             <h2 className="text-2xl font-semibold leading-7 text-gray-900">
               Register
             </h2>
