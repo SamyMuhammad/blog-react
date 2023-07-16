@@ -29,6 +29,13 @@ const getArticlesList = (pageNum = 1) =>
     },
   });
 
+const getMyArticles = (pageNum = 1) =>
+  axios.get(BASE_URL + "/my-articles", {
+    params: {
+      page: pageNum,
+    },
+  });
+
 const getSingleArticle = (slug) => axios.get(BASE_URL + "/article/" + slug, {});
 
 const storeArticle = (articleData) =>
@@ -42,6 +49,7 @@ const storeArticle = (articleData) =>
 export default {
   getFeaturedArticles,
   getArticlesList,
+  getMyArticles,
   getSingleArticle,
   login,
   logout,

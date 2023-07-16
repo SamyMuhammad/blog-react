@@ -8,6 +8,7 @@ import ArticleDetails from "./Pages/Articles/ArticleDetails";
 import AddArticle from "./Pages/Articles/AddArticle";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+import MyArticles from "./Pages/Articles/MyArticles";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="login" element={<Login />}></Route>
         <Route path="article" element={<ArticlesList />}></Route>
         <Route path="article/:slug" element={<ArticleDetails />}></Route>
+        <Route path="my-articles" element={<MyArticles />}></Route>
         <Route path="article/create" element={<AddArticle />}></Route>
       </Routes>
       <Footer />

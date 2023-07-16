@@ -44,9 +44,8 @@ function Header() {
           {isLoggedIn ? (
             <ul className="flex flex-row list-none ml-auto text-sm leading-6">
               <li className="nav-item">
-                <a
-                  // onClick={handleLogout}
-                  href="#"
+                <Link
+                  to="/my-articles"
                   className="px-3 py-2 flex items-center font-bold  leading-snug text-white hover:opacity-75"
                 >
                   <svg
@@ -64,7 +63,7 @@ function Header() {
                     />
                   </svg>
                   My Articles
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
                 <Link
