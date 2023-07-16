@@ -3,15 +3,14 @@ import axios from "axios";
 const BASE_URL = "https://blog-backend.test/api";
 
 // axios config
-axios.defaults.headers.common['Accept'] = "application/json";
-axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('token');
+axios.defaults.headers.common["Accept"] = "application/json";
+axios.defaults.headers.common["Authorization"] =
+  "Bearer " + localStorage.getItem("token");
 
 // auth APIs
-const register = (userData) =>
-  axios.post(BASE_URL + "/register", userData);
+const register = (userData) => axios.post(BASE_URL + "/register", userData);
 
-const login = (userData) =>
-  axios.post(BASE_URL + "/login", userData);
+const login = (userData) => axios.post(BASE_URL + "/login", userData);
 
 const logout = () => axios.post(BASE_URL + "/logout");
 // end auth APIs
@@ -31,6 +30,13 @@ const getArticlesList = (pageNum = 1) =>
   });
 
 const getSingleArticle = (slug) => axios.get(BASE_URL + "/article/" + slug, {});
+
+const storeArticle = (articleData) =>
+  axios.post(BASE_URL + "/article", articleData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 // end articles APIs
 
 export default {
@@ -39,5 +45,6 @@ export default {
   getSingleArticle,
   login,
   logout,
-  register
+  register,
+  storeArticle,
 };

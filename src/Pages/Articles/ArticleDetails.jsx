@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import parse from 'html-react-parser';
 import CommentsSection from "../../Components/CommentsSection";
 import ApiConfig from "../../Services/ApiConfig";
 
@@ -40,7 +41,7 @@ function ArticleDetails() {
         </div>
       </div>
       <img src={article.cover} className="rounded-2xl mt-5 mb-5 w-full h-72" />
-      <article className="leading-9">{article.body}</article>
+      <article className="leading-9">{article.body ? parse(article.body) : ""}</article>
       <CommentsSection />
     </div>
   );

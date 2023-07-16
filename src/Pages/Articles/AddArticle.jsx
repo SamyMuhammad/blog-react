@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import ApiConfig from "../../Services/ApiConfig";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
 
 function AddArticle() {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(
     Boolean(localStorage.getItem("token"))
   );
@@ -28,11 +30,9 @@ function AddArticle() {
 
     console.log(articleData);
 
-    /* ApiConfig.addArticle(articleData)
+    ApiConfig.storeArticle(articleData)
       .then(function (response) {
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("token", response.data.token);
-        window.location = "/";
+        navigate("/article/"+response.data.slug);
       })
       .catch(function (error) {
         if (error.response.status === 422) {
@@ -41,12 +41,12 @@ function AddArticle() {
           console.log(error);
         }
       })
-      .finally(function () {}); */
+      .finally(function () {});
   };
 
   return (
     <div className="w-full px-16 py-10">
-      <form onSubmit={handleSubmit} className="m-auto w-2/3">
+      <form action="#" onSubmit={handleSubmit} className="m-auto w-2/3">
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-8">
             <h2 className="text-2xl font-semibold leading-7 text-gray-900">
@@ -74,7 +74,7 @@ function AddArticle() {
                     placeholder="My new article"
                   />
                   {errors?.title
-                    ? errors.name.map((errorMessage, index) => (
+                    ? errors.title.map((errorMessage, index) => (
                         <div key={index} className="text-sm text-red-600 mt-1">
                           {errorMessage}
                         </div>
@@ -95,9 +95,9 @@ function AddArticle() {
                     id="cover"
                     name="cover"
                     type="file"
-                    value={cover}
-                    onChange={({ target }) => setCover(target.value)}
+                    onChange={({ target }) => setCover(target.files[0])}
                     autoComplete="cover"
+                    accept="image/*"
                     className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus-visible:outline-none sm:text-sm sm:leading-6"
                   />
                   {errors?.cover
@@ -118,10 +118,10 @@ function AddArticle() {
                   Article Body
                 </label>
                 <div className="mt-2">
-                  <ReactQuill theme="snow" value={body} onChange={setBody} className="h-44" placeholder="What is in your mind?"/>
+                    <ReactQuill theme="snow" value={body} onChange={setBody} className="h-44" placeholder="What is in your mind?"/>
                   {errors?.body
                       ? errors.body.map((errorMessage, index) => (
-                          <div key={index} className="text-sm text-red-600 mt-1">
+                          <div key={index} className="text-sm text-red-600 mt-12">
                             {errorMessage}
                           </div>
                         ))
