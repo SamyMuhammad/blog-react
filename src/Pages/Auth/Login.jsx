@@ -2,19 +2,17 @@ import { useState, useEffect } from "react";
 import ApiConfig from "../../Services/ApiConfig";
 
 function Login() {
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    Boolean(localStorage.getItem("token"))
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState();
-  const [token, setToken] = useState();
   const [errors, setErrors] = useState();
 
   useEffect(() => {
-    const loggedInUser = localStorage.getItem("user");
-    if (loggedInUser) {
-      const foundUser = JSON.parse(loggedInUser);
-      setUser(foundUser);
+    if (isLoggedIn) {
+      window.location = "/";
     }
-    console.log(user);
   }, []);
 
   const handleSubmit = async (e) => {
@@ -23,8 +21,6 @@ function Login() {
 
     ApiConfig.login(userData)
       .then(function (response) {
-        setUser(response.data.user);
-        setToken(response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
         localStorage.setItem("token", response.data.token);
         window.location = "/";
@@ -32,6 +28,7 @@ function Login() {
       .catch(function (error) {
         if (error.response.status === 422) {
           setErrors(error.response.data.errors);
+          // setPassword("");
         } else {
           console.log(error);
         }
