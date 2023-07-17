@@ -31,7 +31,7 @@ function FeaturedArticles() {
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {articles.map((article, index) => {
-          return (<ArticleCard key={index} article={article} />);
+          return (<ArticleCard key={index} article={article} dataSource={getFeaturedArticles} currentPage="0" />);
         })}
       </div>
       <div className="ml-4 mt-5 text-center">

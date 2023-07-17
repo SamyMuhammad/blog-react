@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import { ToastContainer } from "react-toastify";
 import Home from "./Pages/Home";
 import Register from "./Pages/Auth/Register";
 import Login from "./Pages/Auth/Login";
@@ -24,6 +25,7 @@ function App() {
         <Route path="article/create" element={<AddArticle />}></Route>
       </Routes>
       <Footer />
+      <ToastContainer />
     </>
   );
 }

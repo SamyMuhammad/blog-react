@@ -44,6 +44,8 @@ const storeArticle = (articleData) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+const deleteArticle = (slug) => axios.delete(BASE_URL + "/article/" + slug);
 // end articles APIs
 
 export default {
@@ -55,4 +57,5 @@ export default {
   logout,
   register,
   storeArticle,
+  deleteArticle,
 };
