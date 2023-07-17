@@ -64,7 +64,7 @@ function ArticleCard({ article, dataSource = () => {}, currentPage = 0 }) {
 
         {article.auth_is_owner && currentPage ? (
           <div className="flex justify-center space-x-2 items-center">
-            <button type="button">
+            <button type="button" onClick={() => navigate('/article/'+article.slug+'/edit')}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

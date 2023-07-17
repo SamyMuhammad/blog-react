@@ -45,6 +45,15 @@ const storeArticle = (articleData) =>
     },
   });
 
+const updateArticle = function (slug, articleData) {
+  articleData._method = "PATCH";
+  return axios.post(BASE_URL + "/article/"+slug, articleData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
 const deleteArticle = (slug) => axios.delete(BASE_URL + "/article/" + slug);
 // end articles APIs
 
@@ -57,5 +66,6 @@ export default {
   logout,
   register,
   storeArticle,
+  updateArticle,
   deleteArticle,
 };

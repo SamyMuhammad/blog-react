@@ -10,6 +10,7 @@ import AddArticle from "./Pages/Articles/AddArticle";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import MyArticles from "./Pages/Articles/MyArticles";
+import EditArticle from "./Pages/Articles/EditArticle";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="article/:slug" element={<ArticleDetails />}></Route>
         <Route path="my-articles" element={<MyArticles />}></Route>
         <Route path="article/create" element={<AddArticle />}></Route>
+        <Route path="article/:slug/edit" element={<EditArticle />}></Route>
       </Routes>
       <Footer />
       <ToastContainer />

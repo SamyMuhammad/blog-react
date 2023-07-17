@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import ApiConfig from "../../Services/ApiConfig";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-function AddArticle() {
+function EditArticle() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(
     Boolean(localStorage.getItem("token"))
   );
+  const { slug } = useParams();
+  const [article, setArticle] = useState({});
   const [title, setTitle] = useState("");
   const [cover, setCover] = useState("");
   const [body, setBody] = useState("");
@@ -18,7 +20,27 @@ function AddArticle() {
     if (!isLoggedIn) {
       window.location = "/";
     }
-  }, []);
+
+    getSingleArticle(slug);
+  }, [slug]);
+
+  const getSingleArticle = (slug) => {
+    ApiConfig.getSingleArticle(slug)
+      .then(function (response) {
+        setArticle(response.data.data);
+        return response.data.data;
+      })
+      .then(function (articleData) {
+        setTitle(articleData.title);
+        setBody(articleData.body);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,9 +50,9 @@ function AddArticle() {
       body: body,
     };
 
-    ApiConfig.storeArticle(articleData)
+    ApiConfig.updateArticle(slug, articleData)
       .then(function (response) {
-        navigate("/article/"+response.data.slug);
+        navigate("/article/" + response.data.slug);
       })
       .catch(function (error) {
         if (error.response.status === 422) {
@@ -48,7 +70,7 @@ function AddArticle() {
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-8">
             <h2 className="text-2xl font-semibold leading-7 text-gray-900">
-              Add a new article
+              Edit <q>{article.title}</q>
             </h2>
           </div>
           <div className="border-b border-gray-900/10 pb-12">
@@ -82,11 +104,16 @@ function AddArticle() {
               </div>
 
               <div className="sm:col-span-4">
+                <img
+                  src={article.cover}
+                  alt={article.title}
+                  className="h-28 w-56 rounded-md"
+                />
                 <label
                   htmlFor="cover"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm font-medium leading-6 text-gray-900 mt-2"
                 >
-                  Upload a cover image
+                  Upload a new cover image
                 </label>
                 <div className="mt-2">
                   <input
@@ -116,14 +143,20 @@ function AddArticle() {
                   Article Body
                 </label>
                 <div className="mt-2">
-                    <ReactQuill theme="snow" value={body} onChange={setBody} className="h-44" placeholder="What is in your mind?"/>
+                  <ReactQuill
+                    theme="snow"
+                    value={body}
+                    onChange={setBody}
+                    className="h-44"
+                    placeholder="What is in your mind?"
+                  />
                   {errors?.body
-                      ? errors.body.map((errorMessage, index) => (
-                          <div key={index} className="text-sm text-red-600 mt-12">
-                            {errorMessage}
-                          </div>
-                        ))
-                      : ""}
+                    ? errors.body.map((errorMessage, index) => (
+                        <div key={index} className="text-sm text-red-600 mt-12">
+                          {errorMessage}
+                        </div>
+                      ))
+                    : ""}
                 </div>
               </div>
             </div>
@@ -134,7 +167,7 @@ function AddArticle() {
             type="submit"
             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Save
+            Update
           </button>
         </div>
       </form>
@@ -142,4 +175,4 @@ function AddArticle() {
   );
 }
 
-export default AddArticle;
+export default EditArticle;
