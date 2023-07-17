@@ -33,7 +33,7 @@ function ArticlesList() {
     <div id="all-articles" className="mt-10 px-10 md:px-15 lg:px-32">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {articles.map((article, index) => {
-          return <ArticleCard key={index} article={article} dataSource={getArticlesList} currentPage={currentPage}/>;
+          return <ArticleCard key={index} article={article} />;
         })}
       </div>
 

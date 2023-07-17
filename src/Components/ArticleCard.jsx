@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import parse from "html-react-parser";
 import ApiConfig from "../Services/ApiConfig";
 
-function ArticleCard({ article, dataSource, currentPage }) {
+function ArticleCard({ article, dataSource = () => {}, currentPage = 0 }) {
   const navigate = useNavigate();
 
   const deleteArticle = (slug) => {
@@ -14,11 +14,7 @@ function ArticleCard({ article, dataSource, currentPage }) {
       ApiConfig.deleteArticle(slug)
         .then(function (response) {
           toast.success("The article has been deleted successfully!");
-          if (currentPage != 0) {
-            dataSource(currentPage);
-          } else {
-            dataSource();
-          }
+          dataSource(currentPage);
         })
         .catch(function (error) {
           switch (error.response.status) {
@@ -66,7 +62,7 @@ function ArticleCard({ article, dataSource, currentPage }) {
           </div>
         </div>
 
-        {article.auth_is_owner ? (
+        {article.auth_is_owner && currentPage ? (
           <div className="flex justify-center space-x-2 items-center">
             <button type="button">
               <svg
