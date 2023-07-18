@@ -43,6 +43,20 @@ function CommentsSection({ slug, comments }) {
       });
   };
 
+  const deleteComment = (commentId) => {
+    ApiConfig.deleteComment(commentId)
+      .then(function (response) {
+        setCommentsList((prev) => prev.filter(comment => comment.id !== commentId));
+        toast.success("Your comment has been deleted successfully!");
+      })
+      .catch(function (error) {
+        toast.error(error.message);
+      })
+      .finally(function () {
+        // always executed
+      });
+  };
+
   return (
     <section className="bg-white dark:bg-gray-900 mt-16">
       <div className="mx-auto">
@@ -118,6 +132,7 @@ function CommentsSection({ slug, comments }) {
                   </button>
                   {/* Delete button */}
                   <button
+                    onClick={() => deleteComment(comment.id)}
                     className="p-2 text-sm font-medium text-center text-red-500 bg-white rounded-lg hover:bg-red-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                     type="button"
                   >

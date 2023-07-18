@@ -61,6 +61,9 @@ const deleteArticle = (slug) => axios.delete(BASE_URL + "/article/" + slug);
 const storeComment = (articleSlug, commentData) =>
   axios.post(BASE_URL + "/article/" + articleSlug + "/comment", commentData);
 
+const deleteComment = (commentId) =>
+  axios.delete(BASE_URL + "/comment/" + commentId);
+
 // End comments APIs
 
 export default {
@@ -75,4 +78,5 @@ export default {
   updateArticle,
   deleteArticle,
   storeComment,
+  deleteComment,
 };
