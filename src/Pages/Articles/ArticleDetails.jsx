@@ -110,7 +110,7 @@ function ArticleDetails() {
       <article className="leading-9">
         {article.body ? parse(article.body) : ""}
       </article>
-      <CommentsSection />
+      <CommentsSection slug={slug} comments={article.comments} />
     </div>
   );
 }
