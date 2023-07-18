@@ -9,6 +9,8 @@ function CommentsSection({ slug, comments }) {
   );
   const [newComment, setNewComment] = useState("");
   const [commentsList, setCommentsList] = useState(comments);
+  const [updatingCommentId, setUpdatingCommentId] = useState(0);
+  const [updatingCommentBody, setUpdatingCommentBody] = useState("");
 
   useEffect(() => {
     setCommentsList(comments);
@@ -36,18 +38,41 @@ function CommentsSection({ slug, comments }) {
         toast.success("Your comment has been added successfully!");
       })
       .catch(function (error) {
-        console.log(error);
+        toast.error(error.message);
       })
       .finally(function () {
         // always executed
       });
   };
 
-  const deleteComment = (commentId) => {
-    ApiConfig.deleteComment(commentId)
+  const updateComment = (e) => {
+    e.preventDefault();
+    if (!isLoggedIn) {
+      return toast.error("You need to be logged in to post a comment.");
+    }
+
+    if (updatingCommentBody.trim().length === 0) {
+      toast.error("You need to fill the input first.");
+      return;
+    }
+
+    const data = {
+      body: updatingCommentBody,
+    };
+
+    ApiConfig.updateComment(updatingCommentId, data)
       .then(function (response) {
-        setCommentsList((prev) => prev.filter(comment => comment.id !== commentId));
-        toast.success("Your comment has been deleted successfully!");
+        setCommentsList((prev) =>
+          prev.filter(function (comment) {
+            if (comment.id === updatingCommentId) {
+              comment.body = updatingCommentBody;
+            }
+            return comment;
+          })
+        );
+        setUpdatingCommentId(0);
+        setUpdatingCommentBody("");
+        toast.success("Your comment has been updated successfully!");
       })
       .catch(function (error) {
         toast.error(error.message);
@@ -55,6 +80,24 @@ function CommentsSection({ slug, comments }) {
       .finally(function () {
         // always executed
       });
+  };
+
+  const deleteComment = (commentId) => {
+    if (confirm("Are you sure you want to delete this comment?")) {
+      ApiConfig.deleteComment(commentId)
+        .then(function (response) {
+          setCommentsList((prev) =>
+            prev.filter((comment) => comment.id !== commentId)
+          );
+          toast.success("Your comment has been deleted successfully!");
+        })
+        .catch(function (error) {
+          toast.error(error.message);
+        })
+        .finally(function () {
+          // always executed
+        });
+    }
   };
 
   return (
@@ -91,7 +134,10 @@ function CommentsSection({ slug, comments }) {
           </button>
         </form>
         {commentsList?.map((comment) => (
-          <article key={comment.id} className="p-6 mb-6 text-base bg-white">
+          <article
+            key={comment.id}
+            className="comment-container p-6 mb-6 text-base bg-white"
+          >
             <footer className="flex justify-between items-center mb-2">
               <div className="flex items-center">
                 <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
@@ -108,10 +154,14 @@ function CommentsSection({ slug, comments }) {
                   </time>
                 </p>
               </div>
-              {isLoggedIn && comment.auth_is_owner ? (
+              {isLoggedIn && comment.auth_is_owner && updatingCommentId !== comment.id ? (
                 <div className="flex justify-center">
                   {/* Edit button */}
                   <button
+                    onClick={() => {
+                      setUpdatingCommentId(comment.id);
+                      setUpdatingCommentBody(comment.body);
+                    }}
                     className="p-2 text-sm font-medium text-center text-yellow-500 bg-white rounded-lg hover:bg-yellow-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                     type="button"
                   >
@@ -156,7 +206,45 @@ function CommentsSection({ slug, comments }) {
                 ""
               )}
             </footer>
-            <p className="text-gray-500 dark:text-gray-400">{comment.body}</p>
+            {updatingCommentId === comment.id ? (
+              <form className="mb-6" action="#" onSubmit={updateComment}>
+                <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                  <textarea
+                    rows="3"
+                    value={updatingCommentBody}
+                    onChange={(e) => setUpdatingCommentBody(e.target.value)}
+                    className="px-0 resize-none w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+                    placeholder="Update your comment..."
+                    required
+                  ></textarea>
+                </div>
+                <div className="flex">
+                  <button
+                    type="submit"
+                    className={`${
+                      !isLoggedIn ? "cursor-not-allowed" : ""
+                    } mr-2 inline-flex items-center py-2 px-3 text-xs font-medium text-center text-white bg-yellow-500 bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800`}
+                    disabled={!isLoggedIn}
+                  >
+                    Update
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUpdatingCommentId(0)}
+                    className={`${
+                      !isLoggedIn ? "cursor-not-allowed" : ""
+                    } inline-flex items-center py-2 px-3 text-xs font-medium text-center text-white bg-indigo-500 bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800`}
+                    disabled={!isLoggedIn}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <p className="comment-body-container text-gray-500 dark:text-gray-400">
+                {comment.body}
+              </p>
+            )}
           </article>
         ))}
       </div>

@@ -64,6 +64,15 @@ const storeComment = (articleSlug, commentData) =>
 const deleteComment = (commentId) =>
   axios.delete(BASE_URL + "/comment/" + commentId);
 
+const updateComment = function (commentId, commentData) {
+  commentData._method = "PATCH";
+  return axios.post(BASE_URL + "/comment/" + commentId, commentData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
 // End comments APIs
 
 export default {
@@ -79,4 +88,5 @@ export default {
   deleteArticle,
   storeComment,
   deleteComment,
+  updateComment,
 };
