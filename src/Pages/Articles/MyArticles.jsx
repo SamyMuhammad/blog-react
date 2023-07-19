@@ -1,15 +1,23 @@
 import { useEffect, useState } from "react";
 import ArticleCard from "./../../Components/ArticleCard";
+import PaginationNavigation from "../../Components/PaginationNavigation";
 import ApiConfig from "./../../Services/ApiConfig";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import { useSearchParams } from "react-router-dom";
 
 function MyArticles() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [articles, setArticles] = useState([]);
   const [paginationMeta, setPaginationMeta] = useState({});
   const [paginationLinks, setPaginationLinks] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(searchParams.get("page") ?? 1);
+  
+  useEffect(() => {
+    getMyArticles(currentPage);
+  }, [currentPage]);
 
   const getMyArticles = (page) => {
+    setSearchParams({ page: page });
+
     ApiConfig.getMyArticles(page)
       .then(function (response) {
         setArticles(response.data.data);
@@ -24,10 +32,6 @@ function MyArticles() {
         // always executed
       });
   };
-
-  useEffect(() => {
-    getMyArticles(currentPage);
-  }, []);
 
   return (
     <div id="all-articles" className="mt-10 px-10 md:px-15 lg:px-32">
@@ -45,64 +49,7 @@ function MyArticles() {
       </div>
 
       {/* The pagination navigation */}
-      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-        <div className="flex flex-1 justify-between sm:hidden">
-          <a
-            href="#"
-            className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Previous
-          </a>
-          <a
-            href="#"
-            className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Next
-          </a>
-        </div>
-        <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm text-gray-700">
-              Showing <span className="font-medium">{paginationMeta.from}</span>{" "}
-              to
-              <span className="font-medium"> {paginationMeta.to}</span> of
-              <span className="font-medium"> {paginationMeta.total}</span>{" "}
-              results
-            </p>
-          </div>
-          <div>
-            <nav
-              className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-              aria-label="Pagination"
-            >
-              {paginationLinks.prev ? (
-                <button
-                  onClick={() => getMyArticles(currentPage - 1)}
-                  className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                >
-                  <span className="sr-only">Previous</span>
-                  <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-                </button>
-              ) : (
-                ""
-              )}
-              {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
-
-              {paginationLinks.next ? (
-                <button
-                  onClick={() => getMyArticles(currentPage + 1)}
-                  className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                >
-                  <span className="sr-only">Next</span>
-                  <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-                </button>
-              ) : (
-                ""
-              )}
-            </nav>
-          </div>
-        </div>
-      </div>
+      <PaginationNavigation paginationLinks={paginationLinks} paginationMeta={paginationMeta} setCurrentPage={setCurrentPage} />
       {/* End pagination navigation */}
     </div>
   );
