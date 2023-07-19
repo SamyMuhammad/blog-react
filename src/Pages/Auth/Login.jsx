@@ -1,17 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import ApiConfig from "../../Services/ApiConfig";
+import { useAuth } from "../../hooks/useAuth";
+import AuthContext from "../../context/authContext";
 
 function Login() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    Boolean(localStorage.getItem("token"))
-  );
+  const navigate = useNavigate();
+  const { setAsLogged } = useAuth();
+  const { authData } = useContext(AuthContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      window.location = "/";
+    if (authData.signedIn) {
+      navigate("/");
     }
   }, []);
 
@@ -21,9 +25,7 @@ function Login() {
 
     ApiConfig.login(userData)
       .then(function (response) {
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("token", response.data.token);
-        window.location = "/";
+        setAsLogged(response.data);
       })
       .catch(function (error) {
         if (error.response.status === 422) {

@@ -1,28 +1,24 @@
-import React, { useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import AuthContext from "../context/authContext";
 import ApiConfig from "../Services/ApiConfig";
 import BlogIcon from "./../assets/blog-icon.png";
 
 function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    Boolean(localStorage.getItem("token"))
-  );
-  const [authUser, setAuthUser] = useState(
-    JSON.parse(localStorage.getItem("user"))
-  );
+  const { setAsLogged, setLogout } = useAuth();
+  const { authData } = useContext(AuthContext);
 
   const handleLogout = (e) => {
     e.preventDefault();
     ApiConfig.logout()
       .then(function () {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-        setIsLoggedIn(false);
+        setLogout();
       })
       .catch(function (error) {
+        // if the token is invalid
         if (error.response.status === 401) {
-          localStorage.removeItem("user");
-          localStorage.removeItem("token");
+          setLogout();
         } else {
           console.log(error);
         }
@@ -41,7 +37,7 @@ function Header() {
             <img src={BlogIcon} alt="Simple Blog" className="h-8" />
           </Link>
 
-          {isLoggedIn ? (
+          {authData.signedIn ? (
             <ul className="flex flex-row list-none ml-auto text-sm leading-6">
               <li className="nav-item">
                 <Link
@@ -67,7 +63,6 @@ function Header() {
               </li>
               <li className="nav-item">
                 <Link
-                  // onClick={handleLogout}
                   to="/article/create"
                   className="px-3 py-2 flex items-center font-bold rounded leading-snug text-white hover:opacity-75"
                 >
@@ -94,7 +89,7 @@ function Header() {
           )}
         </div>
         <div className="flex flex-grow items-center" id="example-navbar-danger">
-          {!isLoggedIn ? (
+          {!authData.signedIn ? (
             <ul className="flex flex-row list-none ml-auto">
               <li className="nav-item">
                 <Link

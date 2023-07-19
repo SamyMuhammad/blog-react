@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import parse from "html-react-parser";
 import { toast } from "react-toastify";
+import AuthContext from "../../context/authContext";
 import CommentsSection from "../../Components/CommentsSection";
 import ApiConfig from "../../Services/ApiConfig";
 
 function ArticleDetails() {
+  const { authData } = useContext(AuthContext);
+
   const navigate = useNavigate();
   const { slug } = useParams();
   const [article, setArticle] = useState({});
@@ -16,7 +19,7 @@ function ArticleDetails() {
   }, [slug]);
 
   const getSingleArticle = (slug) => {
-    ApiConfig.getSingleArticle(slug)
+    ApiConfig.getSingleArticle(slug, authData.token)
       .then(function (response) {
         setArticle(response.data.data);
         setArticleUser(response.data.data.user);

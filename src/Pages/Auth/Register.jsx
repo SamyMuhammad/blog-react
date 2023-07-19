@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useNavigate } from "react";
+import AuthContext from "../../context/authContext";
 import ApiConfig from "../../Services/ApiConfig";
 
 export default function Register() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    Boolean(localStorage.getItem("token"))
-  );
+  const { authData } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,8 +13,8 @@ export default function Register() {
   const [errors, setErrors] = useState();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      window.location = "/";
+    if (authData.signedIn) {
+      navigate("/");
     }
   }, []);
 

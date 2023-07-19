@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ArticleCard from "./../../Components/ArticleCard";
 import ApiConfig from "./../../Services/ApiConfig";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
@@ -15,7 +15,7 @@ function MyArticles() {
         setArticles(response.data.data);
         setPaginationMeta(response.data.meta);
         setPaginationLinks(response.data.links);
-        setCurrentPage(response.data.meta.current_page);       
+        setCurrentPage(response.data.meta.current_page);
       })
       .catch(function (error) {
         console.log(error);
@@ -33,7 +33,14 @@ function MyArticles() {
     <div id="all-articles" className="mt-10 px-10 md:px-15 lg:px-32">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {articles.map((article, index) => {
-          return <ArticleCard key={index} article={article} dataSource={getMyArticles} currentPage={currentPage}/>;
+          return (
+            <ArticleCard
+              key={index}
+              article={article}
+              dataSource={getMyArticles}
+              currentPage={currentPage}
+            />
+          );
         })}
       </div>
 
@@ -70,7 +77,7 @@ function MyArticles() {
             >
               {paginationLinks.prev ? (
                 <button
-                  onClick={() => getMyArticles(currentPage-1)}
+                  onClick={() => getMyArticles(currentPage - 1)}
                   className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                 >
                   <span className="sr-only">Previous</span>
@@ -83,7 +90,7 @@ function MyArticles() {
 
               {paginationLinks.next ? (
                 <button
-                  onClick={() => getMyArticles(currentPage+1)}
+                  onClick={() => getMyArticles(currentPage + 1)}
                   className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                 >
                   <span className="sr-only">Next</span>

@@ -1,11 +1,14 @@
 import axios from "axios";
+import { Cookies } from "react-cookie";
 
-const BASE_URL = "https://blog-backend.test/api";
+const cookie = new Cookies();
 
 // axios config
 axios.defaults.headers.common["Accept"] = "application/json";
 axios.defaults.headers.common["Authorization"] =
-  "Bearer " + localStorage.getItem("token");
+  "Bearer " + cookie.get("auth_token");
+
+const BASE_URL = "https://blog-backend.test/api";
 
 // auth APIs
 const register = (userData) => axios.post(BASE_URL + "/register", userData);
@@ -13,10 +16,12 @@ const register = (userData) => axios.post(BASE_URL + "/register", userData);
 const login = (userData) => axios.post(BASE_URL + "/login", userData);
 
 const logout = () => axios.post(BASE_URL + "/logout");
+
+const getUser = () => axios.get(BASE_URL + "/user");
 // end auth APIs
 
 // start articles APIs
-const getFeaturedArticles = axios.get(BASE_URL + "/article", {
+const getFeaturedArticles = () => axios.get(BASE_URL + "/article", {
   params: {
     featured: 1,
   },
@@ -36,7 +41,7 @@ const getMyArticles = (pageNum = 1) =>
     },
   });
 
-const getSingleArticle = (slug) => axios.get(BASE_URL + "/article/" + slug, {});
+const getSingleArticle = (slug) => axios.get(BASE_URL + "/article/" + slug);
 
 const storeArticle = (articleData) =>
   axios.post(BASE_URL + "/article", articleData, {
@@ -76,6 +81,7 @@ const updateComment = function (commentId, commentData) {
 // End comments APIs
 
 export default {
+  BASE_URL,
   getFeaturedArticles,
   getArticlesList,
   getMyArticles,
@@ -83,6 +89,7 @@ export default {
   login,
   logout,
   register,
+  getUser,
   storeArticle,
   updateArticle,
   deleteArticle,

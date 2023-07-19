@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import AuthContext from "../../context/authContext";
 import ApiConfig from "../../Services/ApiConfig";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -6,17 +7,16 @@ import { useNavigate } from "react-router-dom";
 
 function AddArticle() {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    Boolean(localStorage.getItem("token"))
-  );
+  const { authData } = useContext(AuthContext);
+
   const [title, setTitle] = useState("");
   const [cover, setCover] = useState("");
   const [body, setBody] = useState("");
   const [errors, setErrors] = useState();
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      window.location = "/";
+    if (!authData.signedIn) {
+      navigate("/");
     }
   }, []);
 
@@ -30,7 +30,7 @@ function AddArticle() {
 
     ApiConfig.storeArticle(articleData)
       .then(function (response) {
-        navigate("/article/"+response.data.slug);
+        navigate("/article/" + response.data.slug);
       })
       .catch(function (error) {
         if (error.response.status === 422) {
@@ -116,14 +116,20 @@ function AddArticle() {
                   Article Body
                 </label>
                 <div className="mt-2">
-                    <ReactQuill theme="snow" value={body} onChange={setBody} className="h-44" placeholder="What is in your mind?"/>
+                  <ReactQuill
+                    theme="snow"
+                    value={body}
+                    onChange={setBody}
+                    className="h-44"
+                    placeholder="What is in your mind?"
+                  />
                   {errors?.body
-                      ? errors.body.map((errorMessage, index) => (
-                          <div key={index} className="text-sm text-red-600 mt-12">
-                            {errorMessage}
-                          </div>
-                        ))
-                      : ""}
+                    ? errors.body.map((errorMessage, index) => (
+                        <div key={index} className="text-sm text-red-600 mt-12">
+                          {errorMessage}
+                        </div>
+                      ))
+                    : ""}
                 </div>
               </div>
             </div>

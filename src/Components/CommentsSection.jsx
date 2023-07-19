@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
+import AuthContext from "../context/authContext";
 import ApiConfig from "../Services/ApiConfig";
 
 function CommentsSection({ slug, comments }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    Boolean(localStorage.getItem("token"))
-  );
+  const { authData } = useContext(AuthContext);
+
   const [newComment, setNewComment] = useState("");
   const [commentsList, setCommentsList] = useState(comments);
   const [updatingCommentId, setUpdatingCommentId] = useState(0);
@@ -18,7 +18,7 @@ function CommentsSection({ slug, comments }) {
 
   const postComment = (e) => {
     e.preventDefault();
-    if (!isLoggedIn) {
+    if (!authData.signedIn) {
       return toast.error("You need to be logged in to post a comment.");
     }
 
@@ -47,7 +47,7 @@ function CommentsSection({ slug, comments }) {
 
   const updateComment = (e) => {
     e.preventDefault();
-    if (!isLoggedIn) {
+    if (!authData.signedIn) {
       return toast.error("You need to be logged in to post a comment.");
     }
 
@@ -126,9 +126,9 @@ function CommentsSection({ slug, comments }) {
           <button
             type="submit"
             className={`${
-              !isLoggedIn ? "cursor-not-allowed" : ""
+              !authData.signedIn ? "cursor-not-allowed" : ""
             } inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-indigo-500 bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800`}
-            disabled={!isLoggedIn}
+            disabled={!authData.signedIn}
           >
             Post comment
           </button>
@@ -154,7 +154,9 @@ function CommentsSection({ slug, comments }) {
                   </time>
                 </p>
               </div>
-              {isLoggedIn && comment.auth_is_owner && updatingCommentId !== comment.id ? (
+              {authData.signedIn &&
+              comment.auth_is_owner &&
+              updatingCommentId !== comment.id ? (
                 <div className="flex justify-center">
                   {/* Edit button */}
                   <button
@@ -222,9 +224,9 @@ function CommentsSection({ slug, comments }) {
                   <button
                     type="submit"
                     className={`${
-                      !isLoggedIn ? "cursor-not-allowed" : ""
+                      !authData.signedIn ? "cursor-not-allowed" : ""
                     } mr-2 inline-flex items-center py-2 px-3 text-xs font-medium text-center text-white bg-yellow-500 bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800`}
-                    disabled={!isLoggedIn}
+                    disabled={!authData.signedIn}
                   >
                     Update
                   </button>
@@ -232,9 +234,9 @@ function CommentsSection({ slug, comments }) {
                     type="button"
                     onClick={() => setUpdatingCommentId(0)}
                     className={`${
-                      !isLoggedIn ? "cursor-not-allowed" : ""
+                      !authData.signedIn ? "cursor-not-allowed" : ""
                     } inline-flex items-center py-2 px-3 text-xs font-medium text-center text-white bg-indigo-500 bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800`}
-                    disabled={!isLoggedIn}
+                    disabled={!authData.signedIn}
                   >
                     Cancel
                   </button>

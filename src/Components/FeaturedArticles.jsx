@@ -12,7 +12,7 @@ function FeaturedArticles() {
   }, []);
 
   const getFeaturedArticles = () => {
-    ApiConfig.getFeaturedArticles
+    ApiConfig.getFeaturedArticles()
       .then(function (response) {
         setArticles(response.data.data);
       })

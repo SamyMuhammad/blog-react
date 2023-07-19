@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import AuthContext from "../../context/authContext";
 import ApiConfig from "../../Services/ApiConfig";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router-dom";
 
 function EditArticle() {
+  const { authData } = useContext(AuthContext);
+
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    Boolean(localStorage.getItem("token"))
-  );
   const { slug } = useParams();
   const [article, setArticle] = useState({});
   const [title, setTitle] = useState("");
@@ -17,15 +17,15 @@ function EditArticle() {
   const [errors, setErrors] = useState();
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      window.location = "/";
+    if (!authData.signedIn) {
+      navigate("/");
     }
 
     getSingleArticle(slug);
   }, [slug]);
 
   const getSingleArticle = (slug) => {
-    ApiConfig.getSingleArticle(slug)
+    ApiConfig.getSingleArticle(slug, authData.token)
       .then(function (response) {
         setArticle(response.data.data);
         return response.data.data;
