@@ -6,7 +6,7 @@ import ApiConfig from "../Services/ApiConfig";
 import BlogIcon from "./../assets/blog-icon.png";
 
 function Header() {
-  const { setAsLogged, setLogout } = useAuth();
+  const { setLogout } = useAuth();
   const { authData } = useContext(AuthContext);
 
   const handleLogout = (e) => {

@@ -35,7 +35,8 @@ export const useAuth = () => {
         const cookie = new Cookies();
         cookie.remove('auth_token', { path: '/', expires: getAuthCookieExpiration(), sameSite: 'lax', httpOnly: false });
         setUserData({ signedIn: false, user: null, token: '' });
-        navigate(0);
+        setAuthData({ signedIn: false, user: null, token: '' });
+        navigate('/');
     }
 
     function loginUserOnStartup() {

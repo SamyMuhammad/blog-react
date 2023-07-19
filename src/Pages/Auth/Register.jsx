@@ -1,9 +1,12 @@
-import { useState, useEffect, useContext, useNavigate } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthContext from "../../context/authContext";
+import { useAuth } from "../../hooks/useAuth";
 import ApiConfig from "../../Services/ApiConfig";
 
 export default function Register() {
   const { authData } = useContext(AuthContext);
+  const { setAsLogged } = useAuth();
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -29,9 +32,7 @@ export default function Register() {
 
     ApiConfig.register(userData)
       .then(function (response) {
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("token", response.data.token);
-        window.location = "/";
+        setAsLogged(response.data);
       })
       .catch(function (error) {
         if (error.response.status === 422) {
@@ -73,6 +74,7 @@ export default function Register() {
                     autoComplete="name"
                     className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus-visible:outline-none"
                     placeholder="e.g John Doe"
+                    required
                   />
                   {errors?.name
                     ? errors.name.map((errorMessage, index) => (
@@ -101,6 +103,7 @@ export default function Register() {
                     autoComplete="email"
                     className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus-visible:outline-none sm:text-sm sm:leading-6"
                     placeholder="e.g john@mail.com"
+                    required
                   />
                   {errors?.email
                     ? errors.email.map((errorMessage, index) => (
@@ -129,6 +132,7 @@ export default function Register() {
                     autoComplete="password"
                     className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus-visible:outline-none sm:text-sm sm:leading-6"
                     placeholder="Type a strong password"
+                    required
                   />
                   {errors?.password
                     ? errors.password.map((errorMessage, index) => (
@@ -157,6 +161,7 @@ export default function Register() {
                     autoComplete="password_confirmation"
                     className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus-visible:outline-none sm:text-sm sm:leading-6"
                     placeholder="Retype the password"
+                    required
                   />
                   {errors?.password_confirmation
                     ? errors.password_confirmation.map((errorMessage, index) => (
@@ -175,7 +180,7 @@ export default function Register() {
             type="submit"
             className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Save
+            Register
           </button>
         </div>
       </form>

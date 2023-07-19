@@ -23,9 +23,9 @@ function AddArticle() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const articleData = {
-      title: title,
+      title: title.trim(),
       cover: cover,
-      body: body,
+      body: body.trim(),
     };
 
     ApiConfig.storeArticle(articleData)
@@ -70,6 +70,7 @@ function AddArticle() {
                     autoComplete="title"
                     className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 focus-visible:outline-none"
                     placeholder="My new article"
+                    required
                   />
                   {errors?.title
                     ? errors.title.map((errorMessage, index) => (
@@ -97,6 +98,7 @@ function AddArticle() {
                     autoComplete="cover"
                     accept="image/*"
                     className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus-visible:outline-none sm:text-sm sm:leading-6"
+                    required
                   />
                   {errors?.cover
                     ? errors.cover.map((errorMessage, index) => (
