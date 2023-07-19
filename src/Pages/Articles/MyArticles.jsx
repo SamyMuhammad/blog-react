@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import ArticleCard from "./../../Components/ArticleCard";
 import PaginationNavigation from "../../Components/PaginationNavigation";
 import ApiConfig from "./../../Services/ApiConfig";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import AuthContext from "../../context/authContext";
 
 function MyArticles() {
+  const navigate = useNavigate();
+  const { authData } = useContext(AuthContext);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [articles, setArticles] = useState([]);
   const [paginationMeta, setPaginationMeta] = useState({});
@@ -13,6 +17,10 @@ function MyArticles() {
   const [currentPage, setCurrentPage] = useState(searchParams.get("page") ?? 1);
 
   useEffect(() => {
+    if (!authData.signedIn) {
+      navigate("/");
+    }
+
     getMyArticles(currentPage);
   }, [currentPage]);
 

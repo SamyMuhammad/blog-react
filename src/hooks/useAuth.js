@@ -8,11 +8,11 @@ import ApiConfig from "../Services/ApiConfig";
 export const useAuth = () => {
     const navigate = useNavigate();
     const [userData, setUserData] = useState({ signedIn: false, user: null, token: '' });
-    const { setAuthData } = useContext(AuthContext);
+    const { authData, setAuthData } = useContext(AuthContext);
 
     useEffect(() => {
         setAuthData(userData);
-    }, [userData.signedIn]);
+    }, [userData]);
 
     function getAuthCookieExpiration() {
         let date = new Date();
@@ -39,17 +39,20 @@ export const useAuth = () => {
         navigate('/');
     }
 
-    function loginUserOnStartup() {
+    async function loginUserOnStartup() {
         const cookie = new Cookies();
         if (cookie.get('auth_token')) {
-            ApiConfig.getUser().then(response => {
-                setUserData({ signedIn: true, user: response.data.data, token: userData.token });
+            await ApiConfig.getUser().then(response => {
+                setUserData({ signedIn: true, user: response.data.data, token: response.data.token });
+                setAuthData({ signedIn: true, user: response.data.data, token: response.data.token });
             }).catch(error => {
                 setUserData({ signedIn: false, user: null, token: '' });
+                setAuthData({ signedIn: false, user: null, token: '' });
                 setLogout();
             });
         } else {
             setUserData({ signedIn: false, user: null, token: '' });
+            setAuthData({ signedIn: false, user: null, token: '' });
         }
     }
 

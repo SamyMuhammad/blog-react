@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../../context/authContext";
 import { useAuth } from "../../hooks/useAuth";
 import ApiConfig from "../../Services/ApiConfig";
+import { toast } from "react-toastify";
 
 export default function Register() {
   const { authData } = useContext(AuthContext);
@@ -40,7 +41,7 @@ export default function Register() {
           /* setPassword("");
           setPasswordConfirmation(""); */
         } else {
-          console.log(error);
+          toast.error(error.message);
         }
       })
       .finally(function () {});

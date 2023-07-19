@@ -4,6 +4,7 @@ import ApiConfig from "../../Services/ApiConfig";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function AddArticle() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ function AddArticle() {
         if (error.response.status === 422) {
           setErrors(error.response.data.errors);
         } else {
-          console.log(error);
+          toast.error(error.message);
         }
       })
       .finally(function () {});

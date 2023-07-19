@@ -4,6 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 import AuthContext from "../context/authContext";
 import ApiConfig from "../Services/ApiConfig";
 import BlogIcon from "./../assets/blog-icon.png";
+import { toast } from "react-toastify";
 
 function Header() {
   const { setLogout } = useAuth();
@@ -20,7 +21,7 @@ function Header() {
         if (error.response.status === 401) {
           setLogout();
         } else {
-          console.log(error);
+          toast.error(error.message);
         }
       })
       .finally(function () {});

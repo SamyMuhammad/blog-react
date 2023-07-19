@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ArticleCard from "./ArticleCard";
 import ApiConfig from "./../Services/ApiConfig";
+import { toast } from "react-toastify";
 
 function FeaturedArticles() {
   const [articles, setArticles] = useState([]);
@@ -17,7 +18,7 @@ function FeaturedArticles() {
         setArticles(response.data.data);
       })
       .catch(function (error) {
-        console.log(error);
+        toast.error(error.message);
       })
       .finally(function () {
         // always executed
@@ -31,7 +32,7 @@ function FeaturedArticles() {
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {articles.map((article, index) => {
-          return (<ArticleCard key={index} article={article} />);
+          return <ArticleCard key={index} article={article} />;
         })}
       </div>
       <div className="ml-4 mt-5 text-center">

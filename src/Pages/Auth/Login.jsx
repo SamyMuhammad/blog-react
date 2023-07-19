@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ApiConfig from "../../Services/ApiConfig";
 import { useAuth } from "../../hooks/useAuth";
 import AuthContext from "../../context/authContext";
+import { toast } from "react-toastify";
 
 function Login() {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ function Login() {
           setErrors(error.response.data.errors);
           // setPassword("");
         } else {
-          console.log(error);
+          toast.error(error.message);
         }
       })
       .finally(function () {});

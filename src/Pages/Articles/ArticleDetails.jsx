@@ -25,7 +25,7 @@ function ArticleDetails() {
         setArticleUser(response.data.data.user);
       })
       .catch(function (error) {
-        console.log(error);
+        toast.error(error.message);
       })
       .finally(function () {
         // always executed
