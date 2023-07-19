@@ -3,6 +3,7 @@ import ArticleCard from "./../../Components/ArticleCard";
 import PaginationNavigation from "../../Components/PaginationNavigation";
 import ApiConfig from "./../../Services/ApiConfig";
 import { useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function MyArticles() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -10,13 +11,15 @@ function MyArticles() {
   const [paginationMeta, setPaginationMeta] = useState({});
   const [paginationLinks, setPaginationLinks] = useState({});
   const [currentPage, setCurrentPage] = useState(searchParams.get("page") ?? 1);
-  
+
   useEffect(() => {
     getMyArticles(currentPage);
   }, [currentPage]);
 
   const getMyArticles = (page) => {
     setSearchParams({ page: page });
+    let buttons = document.querySelectorAll("button");
+    buttons.forEach((btn) => (btn.disabled = true));
 
     ApiConfig.getMyArticles(page)
       .then(function (response) {
@@ -26,10 +29,12 @@ function MyArticles() {
         setCurrentPage(response.data.meta.current_page);
       })
       .catch(function (error) {
-        console.log(error);
+        toast.error(error.response.data.message);
       })
       .finally(function () {
-        // always executed
+        setTimeout(() => {
+          buttons.forEach((btn) => (btn.disabled = false));
+        }, 1500);
       });
   };
 
@@ -49,7 +54,11 @@ function MyArticles() {
       </div>
 
       {/* The pagination navigation */}
-      <PaginationNavigation paginationLinks={paginationLinks} paginationMeta={paginationMeta} setCurrentPage={setCurrentPage} />
+      <PaginationNavigation
+        paginationLinks={paginationLinks}
+        paginationMeta={paginationMeta}
+        setCurrentPage={setCurrentPage}
+      />
       {/* End pagination navigation */}
     </div>
   );

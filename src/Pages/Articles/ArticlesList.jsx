@@ -18,6 +18,8 @@ function ArticlesList() {
 
   const getArticlesList = (page) => {
     setSearchParams({ page: page });
+    let buttons = document.querySelectorAll("button");
+    buttons.forEach((btn) => (btn.disabled = true));
 
     ApiConfig.getArticlesList(page)
       .then(function (response) {
@@ -30,22 +32,36 @@ function ArticlesList() {
         toast.error(error.response.data.message);
       })
       .finally(function () {
-        // always executed
+        setTimeout(() => {
+          buttons.forEach((btn) => (btn.disabled = false));
+        }, 1500);
       });
   };
 
   return (
-    <div id="all-articles" className="mt-10 px-10 md:px-15 lg:px-32">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {articles.map((article, index) => {
-          return <ArticleCard key={index} article={article} />;
-        })}
-      </div>
+    <>
+      {articles.length ? (
+        <div id="all-articles" className="mt-10 px-10 md:px-15 lg:px-32">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {articles.map((article, index) => {
+              return <ArticleCard key={index} article={article} />;
+            })}
+          </div>
 
-      {/* The pagination navigation */}
-      <PaginationNavigation paginationLinks={paginationLinks} paginationMeta={paginationMeta} setCurrentPage={setCurrentPage} />
-      {/* End pagination navigation */}
-    </div>
+          <PaginationNavigation
+            paginationLinks={paginationLinks}
+            paginationMeta={paginationMeta}
+            setCurrentPage={setCurrentPage}
+          />
+        </div>
+      ) : (
+        <div className="h-[80vh] pt-28">
+          <h4 className="w-full text-xl text-center font-semibold">
+            No Data to be displayed
+          </h4>
+        </div>
+      )}
+    </>
   );
 }
 
